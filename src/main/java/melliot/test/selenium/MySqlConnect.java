@@ -41,4 +41,21 @@ public class MySqlConnect {
         }
         else return 0;
     }
+
+    public static String getLastTs() throws SQLException {
+        String ts;
+
+        ResultSet resultSet = getConnection().prepareStatement("SELECT * FROM counters").executeQuery();
+
+        resultSet.last();
+
+        if((ts = resultSet.getString("ts")) != null) {
+            return ts;
+        } else {
+            while ((resultSet.getString("ts")) == null) {
+                resultSet.previous();
+            }
+            return resultSet.getString("ts");
+        }
+    }
 }
