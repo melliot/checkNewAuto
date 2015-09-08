@@ -12,10 +12,11 @@ public class CheckNewAuto {
 
         if (newCounter > lastResult) {
 
+            GetNewAutoCounter.getScreenshot();
+
             SlackApi.apiDeleteLastMessage();
 
             String ts = SlackApi.apiPost();
-            System.out.println(ts);
 
             WriteToDb.writeCounterWithTs(newCounter, ts);
 

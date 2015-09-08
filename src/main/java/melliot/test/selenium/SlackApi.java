@@ -40,11 +40,9 @@ public class SlackApi {
 
         String tsFromDb = MySqlConnect.getLastTs();
 
-        String ts = String.format("%f", Double.parseDouble(tsFromDb));
+        System.out.println(tsFromDb);
 
-        System.out.println(ts);
-
-        HttpDelete request = new HttpDelete(deleteMessageUrl + ts);
+        HttpDelete request = new HttpDelete(deleteMessageUrl + tsFromDb.replaceAll("\"", ""));
 
         httpClient.execute(request);
     }

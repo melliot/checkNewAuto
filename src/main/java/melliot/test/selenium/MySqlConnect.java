@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MySqlConnect {
+
     static Connection connection;
 
     public static Connection getConnection() throws SQLException {
@@ -19,43 +20,41 @@ public class MySqlConnect {
         return connection;
     }
 
-    public int getCounter(int entityId) throws SQLException {
-
-        connection = getConnection();
-
-        ResultSet resultSet = connection.prepareStatement(
-                "SELECT * From counters WHERE id=" + entityId + ";"
-        ).executeQuery();
-
-        if (resultSet.next()) {
-            return resultSet.getInt("counter");
-        } else return -1;
-    }
-
     public static int getLastCounter() throws SQLException {
+
         ResultSet resultSet = getConnection().prepareStatement("SELECT * FROM counters").executeQuery();
 
-        if(resultSet.last()) {
+        try {
             resultSet.last();
+
             return resultSet.getInt("counter");
+        } catch (SQLException exc) {
+
+            return 0;
         }
-        else return 0;
     }
 
     public static String getLastTs() throws SQLException {
-        String ts;
+
+        String ts = "0.0";
 
         ResultSet resultSet = getConnection().prepareStatement("SELECT * FROM counters").executeQuery();
 
-        resultSet.last();
+        try {
+            resultSet.last();
 
-        if((ts = resultSet.getString("ts")) != null) {
-            return ts;
-        } else {
+            if((ts = resultSet.getString("ts")) != null) {
+
+                return ts;
+            } else {
             while ((resultSet.getString("ts")) == null) {
                 resultSet.previous();
             }
-            return resultSet.getString("ts");
+                return resultSet.getString("ts");
+            }
+        } catch (SQLException exc) {
+
+            return ts;
         }
     }
 }
